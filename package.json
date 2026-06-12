@@ -1,0 +1,76 @@
+{
+  "name": "kuok-shipserv",
+  "version": "1.0.0",
+  "description": "KUOK ShipServ Integration Application",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap-cloud-sdk/connectivity": "^3",
+    "@sap-cloud-sdk/http-client": "^3",
+    "@sap-cloud-sdk/resilience": "^3",
+    "@sap-cloud-sdk/util": "^3",
+    "@sap/cds": "^8",
+    "@sap/xsenv": "^5",
+    "@sap/xssec": "^4",
+    "cors": "^2.8.6",
+    "express": "^4",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^8"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "build": "cds build --production"
+  },
+  "cds": {
+    "requires": {
+      "S4_DEV_SHIPSERV": {
+        "kind": "rest",
+        "[production]": {
+          "credentials": {
+            "destination": "S4_DEV_SHIPSERV",
+            "requestTimeout": 300000
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "url": "http://localhost:8080",
+            "requestTimeout": 300000
+          }
+        }
+      },
+      "S4_to_SHIPSERV_DEV": {
+        "kind": "rest",
+        "[production]": {
+          "credentials": {
+            "destination": "S4_to_SHIPSERV_DEV",
+            "requestTimeout": 300000
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "url": "http://localhost:9090",
+            "requestTimeout": 300000
+          }
+        }
+      },
+      "auth": {
+        "[production]": {
+          "kind": "xsuaa"
+        },
+        "[development]": {
+          "kind": "mocked"
+        }
+      },
+      "destinations": true
+    },
+    "server": {
+      "cors": false,
+      "csrf": {
+        "enabled": false
+      }
+    }
+  }
+}

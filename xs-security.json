@@ -1,0 +1,38 @@
+{
+  "xsappname": "kuok-shipserv-srv",
+  "tenant-mode": "dedicated",
+  "description": "Security profile for KUOK ShipServ Integration Application",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.execute",
+      "description": "Execute ShipServ integration"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "Executor",
+      "description": "Can trigger ShipServ integration",
+      "scope-references": [
+        "$XSAPPNAME.execute"
+      ]
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "ShipServ_Executor",
+      "description": "Execute ShipServ integrations",
+      "role-template-references": [
+        "$XSAPPNAME.Executor"
+      ]
+    }
+  ],
+  "oauth2-configuration": {
+    "token-validity": 3600,
+    "refresh-token-validity": 86400,
+    "redirect-uris": [
+      "https://*.cfapps.ap11.hana.ondemand.com/**",
+      "https://*.hana.ondemand.com/**",
+      "http://localhost:*/**"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+_schema-version: '3.1'
+ID: kuok-shipserv
+version: 1.0.0
+description: "KUOK ShipServ Integration Application"
+
+parameters:
+  enable-parallel-deployments: true
+
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
+
+modules:
+  - name: kuok-shipserv-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+      memory: 512M
+      disk-quota: 2048M
+    build-parameters:
+      builder: npm
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: kuok-shipserv-xsuaa
+      - name: kuok-shipserv-destination
+      - name: kuok-shipserv-connectivity
+    properties:
+      CDS_ENV: production
+      NODE_ENV: production
+
+resources:
+  - name: kuok-shipserv-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: kuok-shipserv-srv
+        tenant-mode: dedicated
+
+  - name: kuok-shipserv-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+
+  - name: kuok-shipserv-connectivity
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: connectivity
+      service-plan: lite
